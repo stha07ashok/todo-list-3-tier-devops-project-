@@ -26,7 +26,7 @@ node {
                         ${SCANNER_HOME}/bin/sonar-scanner \
                         -Dsonar.host.url=http://172.17.0.1:9000 \
                         -Dsonar.projectKey=devops-project-backend \
-                        -Dsonar.projectName="todo-list: DevOps Project " \
+                        -Dsonar.projectName="todo-list: DevOps Project server" \
                         -Dsonar.projectVersion=0.1.0 \
                         -Dsonar.sources=. \
                         -Dsonar.exclusions="node_modules/**, dist/**" \
