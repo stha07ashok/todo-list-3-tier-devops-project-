@@ -46,25 +46,18 @@ pipeline {
     agent any
 
     stages {
-        stage('System Diagnostic') {
-            steps {
-                script {
-                    // 1. Where are we? (Verifies file system access)
-                    sh 'pwd'
-                    
-                    // 2. Who is the user? (Verifies permissions)
-                    sh 'whoami'
-                    sh 'id'
-                    
-                    // 3. What is in the system PATH? (This explains why 'docker' wasn't found)
-                    sh 'echo $PATH'
-                    
-                    // 4. Check for critical directories
-                    sh 'ls -l /usr/bin/'
-                    
-                    // 5. Verify connectivity to the host's socket (without running docker commands)
-                    sh 'ls -l /var/run/docker.sock || echo "Docker socket NOT found at /var/run/docker.sock"'
+        stage('Build with Docker') {
+            agent {
+                // This tells Jenkins to run this specific stage inside a 
+                // container that already HAS the docker binary installed.
+                docker { 
+                    image 'docker:latest' 
+                    args '-v /var/run/docker.sock:/var/run/docker.sock'
                 }
+            }
+            steps {
+                sh 'docker version'
+                sh 'docker ps'
             }
         }
     }
