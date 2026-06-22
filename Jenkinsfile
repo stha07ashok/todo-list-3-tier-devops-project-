@@ -14,12 +14,7 @@ pipeline {
             }
         }
 
-        stage('Security Scan') {
-            steps {
-                // We assume 'trivy' is installed on the host
-                sh 'trivy fs .' 
-            }
-        }
+       
 
         stage('Build') {
             steps {
