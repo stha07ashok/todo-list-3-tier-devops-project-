@@ -3,8 +3,9 @@ FROM node:22-slim AS builder
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
-COPY . .
-# Ensure your next.config.js has output: 'standalone'
+COPY next.config.js next.config.ts package.json tsconfig.json ./
+COPY public ./public
+COPY src ./src
 RUN npm run build
 
 # Stage 2: Run the app
@@ -17,8 +18,10 @@ RUN groupadd --system --gid 1001 nodejs && useradd --system --uid 1001 --gid nod
 
 # Copy only the necessary files from the builder
 COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+# Remove write permissions to prevent modification at runtime
+RUN chmod -R a-w /app/public /app/.next
 
 USER nextjs
 EXPOSE 3000

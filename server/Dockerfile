@@ -3,7 +3,8 @@ FROM node:22-slim AS builder
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
-COPY . .
+COPY src ./src
+COPY tsconfig.json .
 RUN npm run build
 # Remove devDependencies to keep the image slim
 RUN npm prune --production
