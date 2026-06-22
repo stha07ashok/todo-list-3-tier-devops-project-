@@ -35,13 +35,4 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            script {
-                echo "Cleaning up..."
-                sh 'docker compose down || true'
-                sh 'docker image prune -f || true'
-            }
-        }
-    }
 }
