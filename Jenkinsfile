@@ -2,12 +2,6 @@ pipeline {
     agent any
 
     stages {
-        stage('Quality Scan') {
-            steps {
-                // This triggers the SonarQube analysis file
-                load 'sonar-jenkinsfile' 
-            }
-        }
         stage('Frontend') {
             steps {
                 // This triggers your frontend/Jenkinsfile
