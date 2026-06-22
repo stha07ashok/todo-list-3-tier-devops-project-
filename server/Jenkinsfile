@@ -1,44 +1,26 @@
-node {
-    agent any
 
-    triggers {
-        githubPush()
+node {
+    stage('Checkout Code') {
+        checkout scm
     }
 
-    stages {
-        stage('Checkout Code') {
-            steps {
-                checkout scm
-            }
+    stage('Install Dependencies') {
+        dir('server') {
+            sh 'npm install'
         }
+    }
 
-        stage('Install Dependencies') {
-            steps {
-               
-                dir('server') {
-                    sh 'npm install'
-                }
-            }
+    stage('Build') {
+        dir('server') {
+            sh 'npm run build'
         }
+    }
 
-        stage('Build') {
-            steps {
-               
-                dir('server') {
-                    sh 'npm run build'
-                }
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-             
-                dir('server') {
-                    sh 'pm2 delete todo-backend || true'
-                    sh 'pm2 start dist/index.js --name todo-backend'
-                    sh 'pm2 save'
-                }
-            }
+    stage('Deploy') {
+        dir('server') {
+            sh 'pm2 delete todo-backend || true'
+            sh 'pm2 start dist/index.js --name todo-backend'
+            sh 'pm2 save'
         }
     }
 }
