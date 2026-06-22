@@ -1,19 +1,16 @@
 node {
+    // Define the environment to ensure the system-wide tools are found
+    environment {
+        PATH = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    }
+
     stage('Checkout Code') {
         checkout scm
     }
 
     stage('Install Dependencies') {
         dir('server') {
-            // First, try to find npm, if not found, install it via apt-get (requires root/sudo)
-            // If you are in a restricted container, use this to ensure npm is present:
-            sh '''
-                if ! command -v npm &> /dev/null; then
-                    echo "npm not found, installing..."
-                    apt-get update && apt-get install -y nodejs npm
-                fi
-                npm install
-            '''
+            sh 'npm install'
         }
     }
 
@@ -25,9 +22,11 @@ node {
 
     stage('Deploy') {
         dir('server') {
-            sh 'pm2 delete todo-backend || true'
-            sh 'pm2 start dist/index.js --name todo-backend'
-            sh 'pm2 save'
+            // Ensure the system-wide pm2 is used
+            // You may need to install pm2 globally: sudo npm install -g pm2
+            sh '/usr/bin/pm2 delete todo-backend || true'
+            sh '/usr/bin/pm2 start dist/index.js --name todo-backend'
+            sh '/usr/bin/pm2 save'
         }
     }
 }
