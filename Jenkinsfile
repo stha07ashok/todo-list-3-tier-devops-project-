@@ -2,10 +2,11 @@ pipeline {
     agent any
 
     environment {
-        // Ensure these IDs match your Jenkins UI EXACTLY
         MONGODB_URI = credentials('MONGODB_URI')
         DB_NAME     = credentials('DB_NAME')
         NEXT_PUBLIC_API_URL = credentials('NEXT_PUBLIC_API_URL')
+
+        PATH = "/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"
     }
 
     stages {
@@ -17,7 +18,12 @@ pipeline {
 
         stage('Security Scan') {
             steps {
-                sh '/usr/bin/docker run --rm -v ${WORKSPACE}:/app aquasec/trivy:latest config /app'
+              
+                sh '''
+                   echo "Checking docker location..."
+                   ls -l /usr/bin/docker
+                   /usr/bin/docker run --rm -v ${WORKSPACE}:/app aquasec/trivy:latest config /app
+                '''
             }
         }
 
@@ -34,5 +40,4 @@ pipeline {
             }
         }
     }
-
 }
