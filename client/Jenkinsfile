@@ -1,19 +1,38 @@
 node {
-    stage('Code Analysis') {
-        withSonarQubeEnv('sonar-server') {
-            def SCANNER_HOME = tool name: 'sonar-scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-            sh """
-                ${SCANNER_HOME}/bin/sonar-scanner \
-                -Dsonar.host.url=http://172.17.0.1:9000 \
-                -Dsonar.projectKey=devops-project-frontend \
-                -Dsonar.projectName="DevOps Project Frontend" \
-                -Dsonar.projectVersion=0.1.0 \
-                -Dsonar.sources=. \
-                -Dsonar.exclusions="node_modules/**, .next/**, out/**, dist/**" \
-                -Dsonar.javascript.node.maxSpace=4096
-            """
+    stage('Checkout Code') {
+        checkout scm
+    }
+
+    stage('Install Dependencies') {
+        dir('client') {
+            sh 'npm install'
         }
     }
+
+    stage('Build') {
+        dir('client') {
+            sh 'npm run build'
+        }
+    }
+
+    stage('Frontend Code Analysis') {
+        withSonarQubeEnv('sonar-server') {
+            def SCANNER_HOME = tool name: 'sonar-scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+            dir('client') {
+                sh """
+                    ${SCANNER_HOME}/bin/sonar-scanner \
+                    -Dsonar.host.url=http://172.17.0.1:9000 \
+                    -Dsonar.projectKey=devops-project-frontend \
+                    -Dsonar.projectName="todo-list: DevOps Project client" \
+                    -Dsonar.projectVersion=0.1.0 \
+                    -Dsonar.sources=. \
+                    -Dsonar.exclusions="node_modules/**, .next/**, out/**, dist/**" \
+                    -Dsonar.javascript.node.maxSpace=4096
+                """
+            }
+        }
+    }
+
     stage("Quality Gate Status") {
         timeout(time: 10, unit: 'MINUTES') { 
             waitForQualityGate abortPipeline: true

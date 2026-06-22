@@ -1,5 +1,4 @@
 node {
-    // In Scripted pipelines, use withEnv to set PATH variables
     withEnv(['PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin']) {
         
         stage('Checkout Code') {
@@ -18,9 +17,33 @@ node {
             }
         }
 
+      
+        stage('Server Code Analysis') {
+            withSonarQubeEnv('sonar-server') {
+                def SCANNER_HOME = tool name: 'sonar-scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+                dir('server') {
+                    sh """
+                        ${SCANNER_HOME}/bin/sonar-scanner \
+                        -Dsonar.host.url=http://172.17.0.1:9000 \
+                        -Dsonar.projectKey=devops-project-backend \
+                        -Dsonar.projectName="DevOps Project Backend" \
+                        -Dsonar.projectVersion=0.1.0 \
+                        -Dsonar.sources=. \
+                        -Dsonar.exclusions="node_modules/**, dist/**" \
+                        -Dsonar.javascript.node.maxSpace=4096
+                    """
+                }
+            }
+        }
+
+        stage("Quality Gate Status") {
+            timeout(time: 10, unit: 'MINUTES') { 
+                waitForQualityGate abortPipeline: true
+            }
+        }
+
         stage('Deploy') {
             dir('server') {
-                // Ensure pm2 is accessible via the PATH set above
                 sh 'npx pm2 delete todo-backend || true'
                 sh 'npx pm2 start dist/index.js --name todo-backend'
                 sh 'npx pm2 save'
