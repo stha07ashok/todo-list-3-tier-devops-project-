@@ -1,0 +1,22 @@
+services:
+  # BACKEND SERVICE
+  backend:
+    build: ./server
+    container_name: todo-backend
+    ports:
+      - "5000:5000"
+    environment:
+   
+      - MONGODB_URI=${MONGODB_URI}${DB_NAME}?retryWrites=true&w=majority
+      - NODE_ENV=production
+
+  # FRONTEND SERVICE
+  frontend:
+    build: ./client
+    container_name: todo-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+    depends_on:
+      - backend
