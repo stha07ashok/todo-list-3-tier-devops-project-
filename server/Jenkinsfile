@@ -21,9 +21,9 @@ node {
         stage('Deploy') {
             dir('server') {
                 // Ensure pm2 is accessible via the PATH set above
-                sh 'pm2 delete todo-backend || true'
-                sh 'pm2 start dist/index.js --name todo-backend'
-                sh 'pm2 save'
+                sh 'npx pm2 delete todo-backend || true'
+                sh 'npx pm2 start dist/index.js --name todo-backend'
+                sh 'npx pm2 save'
             }
         }
     }
