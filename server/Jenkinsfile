@@ -1,32 +1,30 @@
 node {
-    // Define the environment to ensure the system-wide tools are found
-    environment {
-        PATH = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    }
-
-    stage('Checkout Code') {
-        checkout scm
-    }
-
-    stage('Install Dependencies') {
-        dir('server') {
-            sh 'npm install'
+    // In Scripted pipelines, use withEnv to set PATH variables
+    withEnv(['PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin']) {
+        
+        stage('Checkout Code') {
+            checkout scm
         }
-    }
 
-    stage('Build') {
-        dir('server') {
-            sh 'npm run build'
+        stage('Install Dependencies') {
+            dir('server') {
+                sh 'npm install'
+            }
         }
-    }
 
-    stage('Deploy') {
-        dir('server') {
-            // Ensure the system-wide pm2 is used
-            // You may need to install pm2 globally: sudo npm install -g pm2
-            sh '/usr/bin/pm2 delete todo-backend || true'
-            sh '/usr/bin/pm2 start dist/index.js --name todo-backend'
-            sh '/usr/bin/pm2 save'
+        stage('Build') {
+            dir('server') {
+                sh 'npm run build'
+            }
+        }
+
+        stage('Deploy') {
+            dir('server') {
+                // Ensure pm2 is accessible via the PATH set above
+                sh 'pm2 delete todo-backend || true'
+                sh 'pm2 start dist/index.js --name todo-backend'
+                sh 'pm2 save'
+            }
         }
     }
 }
