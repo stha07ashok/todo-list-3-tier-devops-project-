@@ -4,11 +4,16 @@ node {
     }
 
     stage('Install Dependencies') {
-      
-        withEnv(['PATH+NPM=/usr/local/bin:/usr/bin:/bin']) { 
-            dir('server') {
-                sh 'npm install'
-            }
+        dir('server') {
+            // First, try to find npm, if not found, install it via apt-get (requires root/sudo)
+            // If you are in a restricted container, use this to ensure npm is present:
+            sh '''
+                if ! command -v npm &> /dev/null; then
+                    echo "npm not found, installing..."
+                    apt-get update && apt-get install -y nodejs npm
+                fi
+                npm install
+            '''
         }
     }
 
