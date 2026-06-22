@@ -17,20 +17,20 @@ pipeline {
 
         stage('Security Scan') {
             steps {
-                sh 'docker run --rm -v ${WORKSPACE}:/app aquasec/trivy:latest config /app'
+                sh '/usr/bin/docker run --rm -v ${WORKSPACE}:/app aquasec/trivy:latest config /app'
             }
         }
 
         stage('Build') {
             steps {
-                sh 'docker compose build --no-cache'
+                sh '/usr/bin/docker compose build --no-cache'
             }
         }
         
         stage('Deploy') {
             steps {
-                sh 'docker compose down'
-                sh 'docker compose up -d'
+                sh '/usr/bin/docker compose down'
+                sh '/usr/bin/docker compose up -d'
             }
         }
     }
