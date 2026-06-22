@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+    environment {
+        SCANNER_HOME = tool name: 'sonar-scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+    }
+    stages {
+        stage('Code Analysis') {
+            steps {
+                withSonarQubeEnv('sonar-server') {
+                    sh """
+                        ${SCANNER_HOME}/bin/sonar-scanner \
+                        -Dsonar.host.url=http://172.17.0.1:9000 \
+                        -Dsonar.projectKey=devops-project \
+                        -Dsonar.projectName="DevOps Project" \
+                        -Dsonar.projectVersion=0.1.0 \
+                        -Dsonar.sources=. \
+                        -Dsonar.exclusions="node_modules/**, .next/**, out/**, dist/**" \
+                        -Dsonar.javascript.node.maxSpace=4096
+                    """
+                }
+            }
+        }
+        stage("Quality Gate Status") {
+            steps {
+                timeout(time: 10, unit: 'MINUTES') { 
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+    }
+}

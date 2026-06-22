@@ -1,32 +1,23 @@
 pipeline {
     agent any
 
-    environment {
-        MONGODB_URI = credentials('MONGODB_URI')
-        DB_NAME     = credentials('DB_NAME')
-        NEXT_PUBLIC_API_URL = credentials('NEXT_PUBLIC_API_URL')
-    }
-
     stages {
-        stage('Checkout') {
+        stage('Quality Scan') {
             steps {
-                checkout scm
+                // This triggers the SonarQube analysis file
+                load 'sonar-jenkinsfile' 
             }
         }
-
-       
-
-        stage('Build') {
+        stage('Frontend') {
             steps {
-               
-                sh 'docker compose build --no-cache'
+                // This triggers your frontend/Jenkinsfile
+                load 'frontend/Jenkinsfile'
             }
         }
-        
-        stage('Deploy') {
+        stage('Backend') {
             steps {
-                sh 'docker compose down'
-                sh 'docker compose up -d'
+                // This triggers your backend/Jenkinsfile
+                load 'backend/Jenkinsfile'
             }
         }
     }
