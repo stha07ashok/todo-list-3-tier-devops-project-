@@ -4,7 +4,7 @@ pipeline {
     environment {
         // These pull directly from the Credentials you created in Step 1
         MONGODB_URI = credentials('MONGODB_URI')
-        DB_NAME     = credentials('DB_NAME')
+        DB_NAME    = credentials('DB_NAME')
         NEXT_PUBLIC_API_URL = credentials('NEXT_PUBLIC_API_URL')
     }
 
