@@ -82,7 +82,7 @@ export default function Home() {
     fetchTodos();
   }, [fetchTodos]);
 
-  const handleCreate = async (e: React.FormEvent) => {
+  const handleCreate = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (!title.trim()) return;
     try {
@@ -119,7 +119,7 @@ export default function Home() {
     setEditDescription(todo.description || '');
   };
 
-  const handleSaveEdit = async (e: React.FormEvent) => {
+  const handleSaveEdit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (!editingTodo || !editTitle.trim()) return;
     try {
@@ -256,16 +256,13 @@ export default function Home() {
               <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Quick Tips</h3>
               <ul className="space-y-2 text-xs text-gray-500 dark:text-gray-400">
                 <li className="flex items-start gap-2">
-                  <span className="mt-0.5 h-4 w-4 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-[10px] font-bold text-indigo-600 dark:text-indigo-400 shrink-0">1</span>
-                  Click the circle to mark a task complete
+                  <span className="mt-0.5 h-4 w-4 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-[10px] font-bold text-indigo-600 dark:text-indigo-400 shrink-0">1</span> Click the circle to mark a task complete
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="mt-0.5 h-4 w-4 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-[10px] font-bold text-indigo-600 dark:text-indigo-400 shrink-0">2</span>
-                  Hover over a task to reveal edit & delete
+                  <span className="mt-0.5 h-4 w-4 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-[10px] font-bold text-indigo-600 dark:text-indigo-400 shrink-0">2</span> Hover over a task to reveal edit & delete
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="mt-0.5 h-4 w-4 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-[10px] font-bold text-indigo-600 dark:text-indigo-400 shrink-0">3</span>
-                  Track your progress with the stats above
+                  <span className="mt-0.5 h-4 w-4 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-[10px] font-bold text-indigo-600 dark:text-indigo-400 shrink-0">3</span> Track your progress with the stats above
                 </li>
               </ul>
             </div>
