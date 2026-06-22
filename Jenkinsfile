@@ -48,9 +48,12 @@ pipeline {
     post {
         always {
            
-            sh 'docker image prune -f'
-           
-            cleanWs()
+            script {
+                
+                echo "Cleaning up..."
+                sh 'docker image prune -f || true'
+                cleanWs()
+            }
         }
         failure {
             echo "Pipeline failed! Check the console output for details."
