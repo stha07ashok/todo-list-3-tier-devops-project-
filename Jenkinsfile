@@ -2,13 +2,13 @@ pipeline {
     agent any
 
     stages {
-        stage('client') {
+        stage('Client Build') {
             steps {
                 // This triggers your frontend/Jenkinsfile
                 load 'client/Jenkinsfile'
             }
         }
-        stage('server') {
+        stage('Server Build') {
             steps {
                 // This triggers your backend/Jenkinsfile
                 load 'server/Jenkinsfile'
