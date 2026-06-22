@@ -72,10 +72,8 @@ pipeline {
 
     post {
         always {
-            node { // Ensures cleanup runs within a valid workspace context
-                cleanWs()
-                sh 'docker image prune -f || true'
-            }
+            cleanWs()
+            sh 'docker image prune -f || true'
         }
         failure {
             echo "Pipeline failed. Please check the logs above."
