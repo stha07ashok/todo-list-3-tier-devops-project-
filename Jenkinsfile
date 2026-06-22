@@ -46,17 +46,24 @@ pipeline {
     agent any
 
     stages {
-        stage('Test Docker Connection') {
+        stage('System Diagnostic') {
             steps {
                 script {
-                    // Check if the docker command is found
-                    sh 'which docker'
+                    // 1. Where are we? (Verifies file system access)
+                    sh 'pwd'
                     
-                    // Check if Jenkins can talk to the Docker daemon
-                    sh 'docker version'
+                    // 2. Who is the user? (Verifies permissions)
+                    sh 'whoami'
+                    sh 'id'
                     
-                    // Check if we have permission to list containers
-                    sh 'docker ps'
+                    // 3. What is in the system PATH? (This explains why 'docker' wasn't found)
+                    sh 'echo $PATH'
+                    
+                    // 4. Check for critical directories
+                    sh 'ls -l /usr/bin/'
+                    
+                    // 5. Verify connectivity to the host's socket (without running docker commands)
+                    sh 'ls -l /var/run/docker.sock || echo "Docker socket NOT found at /var/run/docker.sock"'
                 }
             }
         }
