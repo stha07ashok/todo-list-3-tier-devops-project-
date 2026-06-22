@@ -5,13 +5,13 @@ pipeline {
         stage('Frontend') {
             steps {
                 // This triggers your frontend/Jenkinsfile
-                load 'frontend/Jenkinsfile'
+                load 'client/Jenkinsfile'
             }
         }
         stage('Backend') {
             steps {
                 // This triggers your backend/Jenkinsfile
-                load 'backend/Jenkinsfile'
+                load 'server/Jenkinsfile'
             }
         }
     }
