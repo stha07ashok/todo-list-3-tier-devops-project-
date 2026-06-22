@@ -1,26 +1,27 @@
-
 node {
-    stage('Checkout Code') {
-        checkout scm
-    }
-
-    stage('Install Dependencies') {
-        dir('server') {
-            sh 'npm install'
+    nodejs('node-18') { 
+        stage('Checkout Code') {
+            checkout scm
         }
-    }
 
-    stage('Build') {
-        dir('server') {
-            sh 'npm run build'
+        stage('Install Dependencies') {
+            dir('server') {
+                sh 'npm install'
+            }
         }
-    }
 
-    stage('Deploy') {
-        dir('server') {
-            sh 'pm2 delete todo-backend || true'
-            sh 'pm2 start dist/index.js --name todo-backend'
-            sh 'pm2 save'
+        stage('Build') {
+            dir('server') {
+                sh 'npm run build'
+            }
+        }
+
+        stage('Deploy') {
+            dir('server') {
+                sh 'pm2 delete todo-backend || true'
+                sh 'pm2 start dist/index.js --name todo-backend'
+                sh 'pm2 save'
+            }
         }
     }
 }
