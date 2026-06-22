@@ -1,4 +1,4 @@
-pipeline {
+node {
     agent any
     environment {
         SCANNER_HOME = tool name: 'sonar-scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
