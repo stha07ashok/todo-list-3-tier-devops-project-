@@ -5,6 +5,7 @@ import { connectToDatabase } from './connectDB/db.js';
 import todoRoutes from './routes/todoRoutes.js';
 
 const app = express();
+app.disable('x-powered-by');
 const PORT = 5000;
 
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
