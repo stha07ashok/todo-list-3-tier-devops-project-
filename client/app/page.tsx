@@ -137,6 +137,82 @@ export default function Home() {
   const completedCount = todos.filter((t) => t.completed).length;
   const progress = todos.length ? Math.round((completedCount / todos.length) * 100) : 0;
 
+  let taskContent;
+  if (loading) {
+    taskContent = <Spinner />;
+  } else if (todos.length === 0) {
+    taskContent = (
+      <div className="flex flex-col items-center justify-center py-16">
+        <ClipboardIcon />
+        <h3 className="mt-4 text-lg font-semibold text-gray-900 dark:text-white">No tasks yet</h3>
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 text-center max-w-xs">
+          Your todo list is empty. Add your first task from the panel on the left.
+        </p>
+      </div>
+    );
+  } else {
+    taskContent = (
+      <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-1 scrollbar-thin">
+        {todos.map((todo, index) => (
+          <div
+            key={todo._id}
+            className="group relative rounded-xl bg-white/60 dark:bg-gray-700/30 border border-gray-100 dark:border-gray-700/50 p-4 shadow-sm hover:shadow-md transition-all duration-300"
+            style={{ animationDelay: `${index * 50}ms` }}
+          >
+            <div className="absolute left-0 top-0 bottom-0 w-1 rounded-l-xl bg-gradient-to-b from-indigo-500 to-purple-500 opacity-50 group-hover:opacity-100 transition-opacity" />
+            <div className="flex items-start gap-3 pl-2">
+              <button
+                onClick={() => handleToggle(todo)}
+                className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all duration-200 ${
+                  todo.completed
+                    ? 'border-emerald-400 bg-emerald-400 text-white scale-110'
+                    : 'border-gray-300 dark:border-gray-600 hover:border-indigo-400 hover:scale-110'
+                }`}
+              >
+                {todo.completed && <CheckIcon />}
+              </button>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-start justify-between gap-2">
+                  <h3 className={`text-sm font-semibold ${
+                    todo.completed ? 'text-gray-400 dark:text-gray-500 line-through decoration-2' : 'text-gray-900 dark:text-white'
+                  }`}>
+                    {todo.title}
+                  </h3>
+                  <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200 shrink-0">
+                    <button
+                      onClick={() => handleEdit(todo)}
+                      className="rounded-lg p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:text-indigo-400 dark:hover:bg-indigo-900/30 transition-all"
+                      title="Edit"
+                    >
+                      <EditIcon />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(todo._id)}
+                      className="rounded-lg p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:text-red-400 dark:hover:bg-red-900/30 transition-all"
+                      title="Delete"
+                    >
+                      <DeleteIcon />
+                    </button>
+                  </div>
+                </div>
+                {todo.description && (
+                  <p className={`mt-0.5 text-xs ${
+                    todo.completed ? 'text-gray-400 dark:text-gray-500' : 'text-gray-500 dark:text-gray-400'
+                  }`}>
+                    {todo.description}
+                  </p>
+                )}
+                <p className="mt-1 text-[11px] text-gray-400 dark:text-gray-500">
+                  {new Date(todo.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                </p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-950 dark:to-gray-900">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -284,76 +360,7 @@ export default function Home() {
                 </div>
               </div>
 
-              {loading ? (
-                <Spinner />
-              ) : todos.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-16">
-                  <ClipboardIcon />
-                  <h3 className="mt-4 text-lg font-semibold text-gray-900 dark:text-white">No tasks yet</h3>
-                  <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 text-center max-w-xs">
-                    Your todo list is empty. Add your first task from the panel on the left.
-                  </p>
-                </div>
-              ) : (
-                <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-1 scrollbar-thin">
-                  {todos.map((todo, index) => (
-                    <div
-                      key={todo._id}
-                      className="group relative rounded-xl bg-white/60 dark:bg-gray-700/30 border border-gray-100 dark:border-gray-700/50 p-4 shadow-sm hover:shadow-md transition-all duration-300"
-                      style={{ animationDelay: `${index * 50}ms` }}
-                    >
-                      <div className="absolute left-0 top-0 bottom-0 w-1 rounded-l-xl bg-gradient-to-b from-indigo-500 to-purple-500 opacity-50 group-hover:opacity-100 transition-opacity" />
-                      <div className="flex items-start gap-3 pl-2">
-                        <button
-                          onClick={() => handleToggle(todo)}
-                          className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all duration-200 ${
-                            todo.completed
-                              ? 'border-emerald-400 bg-emerald-400 text-white scale-110'
-                              : 'border-gray-300 dark:border-gray-600 hover:border-indigo-400 hover:scale-110'
-                          }`}
-                        >
-                          {todo.completed && <CheckIcon />}
-                        </button>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-start justify-between gap-2">
-                            <h3 className={`text-sm font-semibold ${
-                              todo.completed ? 'text-gray-400 dark:text-gray-500 line-through decoration-2' : 'text-gray-900 dark:text-white'
-                            }`}>
-                              {todo.title}
-                            </h3>
-                            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200 shrink-0">
-                              <button
-                                onClick={() => handleEdit(todo)}
-                                className="rounded-lg p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:text-indigo-400 dark:hover:bg-indigo-900/30 transition-all"
-                                title="Edit"
-                              >
-                                <EditIcon />
-                              </button>
-                              <button
-                                onClick={() => handleDelete(todo._id)}
-                                className="rounded-lg p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:text-red-400 dark:hover:bg-red-900/30 transition-all"
-                                title="Delete"
-                              >
-                                <DeleteIcon />
-                              </button>
-                            </div>
-                          </div>
-                          {todo.description && (
-                            <p className={`mt-0.5 text-xs ${
-                              todo.completed ? 'text-gray-400 dark:text-gray-500' : 'text-gray-500 dark:text-gray-400'
-                            }`}>
-                              {todo.description}
-                            </p>
-                          )}
-                          <p className="mt-1 text-[11px] text-gray-400 dark:text-gray-500">
-                            {new Date(todo.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+              {taskContent}
             </div>
           </div>
         </div>
