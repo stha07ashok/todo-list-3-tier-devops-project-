@@ -14,8 +14,11 @@ RUN npm ci
 
 # STAGE 3: Build
 FROM base AS builder
+WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
+COPY package.json next.config.js* tsconfig.json* ./
 COPY app ./app
+COPY public ./public
 RUN npm run build
 
 # STAGE 4: Final Production Runner 
