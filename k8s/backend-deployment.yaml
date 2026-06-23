@@ -28,5 +28,12 @@ spec:
             configMapKeyRef:
               name: db-config
               key: name
+        resources: 
+          requests:
+            memory: "128Mi"
+            cpu: "200m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
         ports:
         - containerPort: 5000
