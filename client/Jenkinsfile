@@ -1,4 +1,5 @@
 node {
+    cleanWs()
     stage('Checkout Code') {
         checkout scm
     }
@@ -31,11 +32,16 @@ node {
                 """
             }
         }
+         sleep(10) 
+            
+    
+            timeout(time: 10, unit: 'MINUTES') { 
+                waitForQualityGate abortPipeline: true
+            }
     }
 
-    stage("Quality Gate Status") {
-        timeout(time: 10, unit: 'MINUTES') { 
-            waitForQualityGate abortPipeline: true
+    stage('Deploy') {
+        dir('client') {
+            sh 'npx serve -s build -l 3000 &'
         }
     }
-}
