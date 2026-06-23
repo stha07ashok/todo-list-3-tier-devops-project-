@@ -1,5 +1,7 @@
 node {
-    cleanWs()
+  
+    cleanWs() 
+
     stage('Checkout Code') {
         checkout scm
     }
@@ -32,16 +34,18 @@ node {
                 """
             }
         }
-         sleep(10) 
-            
-    
-            timeout(time: 10, unit: 'MINUTES') { 
-                waitForQualityGate abortPipeline: true
-            }
+        sleep(10)
+        timeout(time: 10, unit: 'MINUTES') { 
+            waitForQualityGate abortPipeline: true
+        }
     }
 
     stage('Deploy') {
         dir('client') {
-            sh 'npx serve -s build -l 3000 &'
+            
+            sh 'npx pm2 delete todo-frontend || true'
+            sh 'npx pm2 serve out 3000 --name todo-frontend --spa'
+            sh 'npx pm2 save'
         }
     }
+}
