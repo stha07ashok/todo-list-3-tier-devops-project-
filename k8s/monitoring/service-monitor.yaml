@@ -9,6 +9,27 @@ spec:
   selector:
     matchLabels:
       app: server
+  namespaceSelector:
+    matchNames:
+      - default
   endpoints:
   - port: http-port
+    path: /metrics
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: todo-client-monitor
+  namespace: monitoring
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: client
+  namespaceSelector:
+    matchNames:
+      - default
+  endpoints:
+  - port: http-client
     path: /metrics
