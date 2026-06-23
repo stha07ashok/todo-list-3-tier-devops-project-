@@ -16,10 +16,9 @@ RUN npm ci
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-COPY package.json next.config.ts tsconfig.json ./
+COPY package.json package-lock.json next.config.ts tsconfig.json postcss.config.mjs tailwind.config.ts ./
 COPY app ./app
 COPY public ./public
-COPY styles ./styles
 RUN npm run build
 
 # STAGE 4: Final Production Runner 
