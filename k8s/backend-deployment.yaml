@@ -16,6 +16,7 @@ spec:
       - name: server-container
         image: docker.io/library/todo-list-backend:latest
         imagePullPolicy: IfNotPresent
+        command: ["/bin/sh", "-c", "sleep 3600"]
         env:
         - name: MONGODB_URI
           valueFrom:
