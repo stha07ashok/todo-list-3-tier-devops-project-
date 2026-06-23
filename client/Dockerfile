@@ -16,7 +16,7 @@ RUN npm ci
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-COPY package.json package-lock.json next.config.ts tsconfig.json postcss.config.mjs tailwind.config.ts ./
+COPY package.json package-lock.json next.config.ts tsconfig.json postcss.config.mjs ./
 COPY app ./app
 COPY public ./public
 RUN npm run build
