@@ -15,7 +15,7 @@ RUN npm ci
 # STAGE 3: Build
 FROM base AS builder
 COPY --from=deps /app/node_modules ./node_modules
-COPY src ./src
+COPY app ./app
 RUN npm run build
 
 # STAGE 4: Final Production Runner 
