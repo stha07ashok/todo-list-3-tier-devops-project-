@@ -30,8 +30,6 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 
-RUN chmod -R 555 /app
-
 USER nextjs
 
 EXPOSE 3000
