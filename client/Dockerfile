@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
 
 # STAGE 2: Deps
 FROM base AS deps
-COPY package.json package-lock.json* ./
+COPY package.json package-lock.json ./
 RUN npm ci
 
 # STAGE 3: Build
