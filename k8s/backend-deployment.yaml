@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+    spec:
+      containers:
+      - name: server-container
+        image: docker.io/library/todo-list-backend:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              name: db-secrets
+              key: uri
+        
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: db-config
+              key: name
+        ports:
+        - containerPort: 5000

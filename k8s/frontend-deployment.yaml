@@ -1,0 +1,25 @@
+---
+# Frontend Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: client
+  template:
+    metadata:
+      labels:
+        app: client
+    spec:
+      containers:
+      - name: client-container
+        image: docker.io/library/todo-list-frontend:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: API_URL
+          value: "http://server-service:5000" 
+        ports:
+        - containerPort: 3000
