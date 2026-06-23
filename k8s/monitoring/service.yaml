@@ -12,6 +12,8 @@ spec:
   - name: http-port # <--- Essential for ServiceMonitor
     port: 5000
     targetPort: 5000
+    selector:
+    app: server
 ---
 apiVersion: v1
 kind: Service
@@ -26,3 +28,5 @@ spec:
   - name: http-client # <--- Essential for ServiceMonitor
     port: 80
     targetPort: 3000
+    selector:
+    app: client
