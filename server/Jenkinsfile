@@ -1,4 +1,6 @@
 node {
+    
+
     withEnv(['PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin']) {
         
         stage('Checkout Code') {
@@ -17,7 +19,6 @@ node {
             }
         }
 
-      
         stage('Server Code Analysis') {
             withSonarQubeEnv('sonar-server') {
                 def SCANNER_HOME = tool name: 'sonar-scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
@@ -34,9 +35,10 @@ node {
                     """
                 }
             }
-        }
-
-        stage("Quality Gate Status") {
+      
+            sleep(10) 
+            
+    
             timeout(time: 10, unit: 'MINUTES') { 
                 waitForQualityGate abortPipeline: true
             }
@@ -44,8 +46,11 @@ node {
 
         stage('Deploy') {
             dir('server') {
+  
                 sh 'npx pm2 delete todo-backend || true'
+            
                 sh 'npx pm2 start dist/index.js --name todo-backend'
+          
                 sh 'npx pm2 save'
             }
         }
