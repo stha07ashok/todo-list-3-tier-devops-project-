@@ -8,7 +8,7 @@ A full-stack todo application (Next.js + Express + MongoDB) with a complete loca
 | --------------- | -------------------------------------------------------- |
 | Application     | Next.js 16, React 19, TypeScript 5, Tailwind CSS v4     |
 | Backend         | Express 5, Mongoose 9, TypeScript 6                      |
-| Database        | MongoDB Atlas (or local MongoDB)                         |
+| Database        | MongoDB Atlas                                            |
 | Container       | Docker (multi-stage build, Ubuntu 24.04 / Node.js 22)   |
 | CI              | Jenkins (Docker container) + ngrok                       |
 | CD              | ArgoCD (in Minikube)                                     |
